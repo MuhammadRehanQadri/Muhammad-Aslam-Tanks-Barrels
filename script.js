@@ -52,3 +52,67 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     });
   });
 });
+
+// Contact Form Handling
+const contactForm = document.querySelector('.contact-form');
+if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const form = e.target;
+        const data = new FormData(form);
+        const action = form.action;
+        
+        // Get button to show loading state
+        const btn = form.querySelector('button[type="submit"]');
+        const originalText = btn.innerText;
+        
+        // Show loading state
+        btn.innerText = 'Sending...';
+        btn.disabled = true;
+        btn.style.opacity = '0.7';
+
+        fetch(action, {
+            method: 'POST',
+            body: data,
+            headers: {
+                'Accept': 'application/json'
+            }
+        }).then(response => {
+            if (response.ok) {
+                // Success State
+                btn.innerText = 'Message Sent!';
+                btn.style.backgroundColor = '#10b981'; // Success Green
+                
+                // Clear form
+                form.reset();
+                
+                // User feedback
+                alert("Thank you! your message has been sent successfully.");
+            } else {
+                // Error State
+                response.json().then(data => {
+                    if (Object.hasOwn(data, 'errors')) {
+                        alert(data["errors"].map(error => error["message"]).join(", "));
+                    } else {
+                        alert("Oops! There was a problem submitting your form");
+                    }
+                });
+                btn.innerText = 'Error';
+                btn.style.backgroundColor = '#ef4444'; 
+            }
+        }).catch(error => {
+            alert("Oops! There was a problem submitting your form");
+            btn.innerText = 'Error';
+            btn.style.backgroundColor = '#ef4444'; 
+        }).finally(() => {
+            // Reset button state after delay
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.backgroundColor = '';
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            }, 3000);
+        });
+    });
+}
