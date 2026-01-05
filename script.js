@@ -61,7 +61,12 @@ if (contactForm) {
         
         const form = e.target;
         const data = new FormData(form);
-        const action = form.action;
+        
+        // Use explicit Formspree URL as fallback if action is missing or local
+        let action = form.action;
+        if (!action || action === window.location.href) {
+            action = 'https://formspree.io/f/mqeanodd';
+        }
         
         // Get button to show loading state
         const btn = form.querySelector('button[type="submit"]');
