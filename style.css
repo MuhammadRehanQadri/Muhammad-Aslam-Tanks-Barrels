@@ -567,6 +567,80 @@ footer {
 }
 
 /* Responsive */
+/* Services Section */
+.services-section {
+    background-color: #f1f5f9;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.service-card {
+    background-color: var(--bg-white);
+    padding: 2.5rem;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    border-top: 4px solid transparent;
+}
+
+.service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+    border-top-color: var(--accent-color);
+}
+
+.icon-box {
+    width: 60px;
+    height: 60px;
+    background-color: rgba(245, 158, 11, 0.1); /* light amber */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    color: var(--accent-color);
+    font-size: 1.5rem;
+    transition: var(--transition);
+}
+
+.service-card:hover .icon-box {
+    background-color: var(--accent-color);
+    color: #fff;
+}
+
+.service-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.service-card p {
+    color: #64748b;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.service-cats {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 1rem;
+}
+
+/* Helper for blending logo if it has white bg */
+.logo img {
+     background-color: transparent;
+     border-radius: 5px; 
+}
+/* Note: I'm not applying a blend mode blindly as it can ruin the logo. */
+
+/* Responsive specific updates */
 @media (max-width: 960px) {
   .container {
     max-width: 90%;
@@ -626,4 +700,102 @@ footer {
   .hero {
     min-height: 500px;
   }
+  
+  .about-grid {
+      grid-template-columns: 1fr;
+  }
+}
+
+/* Updated Logo Style */
+.logo a {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 50px;
+    width: auto;
+}
+
+/* About Grid Layout */
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    text-align: left;
+}
+
+.about-image img {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.about-image:hover img {
+    transform: scale(1.02);
+}
+
+/* Careers Page Specifics */
+.hero-bg.careers {
+    background-image: url("images/careers_hero.png");
+}
+
+.job-list {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.job-card {
+    background-color: var(--bg-white);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+    border-left: 5px solid var(--accent-color);
+    transition: var(--transition);
+}
+
+.job-card:hover {
+    transform: translateX(10px);
+    box-shadow: var(--shadow-hover);
+}
+
+.job-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.job-header h3 {
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.job-type {
+    background-color: #e2e8f0;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: var(--secondary-color);
+    font-weight: 600;
+}
+
+.job-desc {
+    color: #64748b;
+    margin-bottom: 1.5rem;
+}
+
+.apply-btn {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent-color);
+}
+
+.apply-btn:hover {
+    text-decoration: underline;
 }
