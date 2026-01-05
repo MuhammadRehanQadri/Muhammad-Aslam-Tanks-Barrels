@@ -121,3 +121,6 @@ if (contactForm) {
         });
     });
 }
+
+// Dynamic Year in Footer
+document.getElementById("current-year").textContent = new Date().getFullYear();

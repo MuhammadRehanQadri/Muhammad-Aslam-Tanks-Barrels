@@ -7,6 +7,26 @@
       name="description"
       content="Muhammad Aslam Tanks & Barrels Maintenance - High-Quality Drums, IBCs & Packaging Solutions in UAE."
     />
+    <meta
+      name="keywords"
+      content="Steel Drums, Plastic Barrels, IBC Tanks, Drum Reconditioning, Industrial Packaging, Sharjah, UAE, Waste Management, Chemical Storage, Water Drums"
+    />
+    <meta name="author" content="Muhammad Aslam Tanks & Barrels Maintenance" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://muhammadrehanqadri.github.io/Muhammad-Aslam-Tanks-Barrels/" />
+    <meta property="og:title" content="Muhammad Aslam Tanks & Barrels | Industrial Packaging UAE" />
+    <meta property="og:description" content="Leading supplier of New & Reconditioned Steel Drums, Plastic Barrels and IBC Containers in UAE. Services include cleaning, painting and delivery." />
+    <meta property="og:image" content="images/about_us.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://muhammadrehanqadri.github.io/Muhammad-Aslam-Tanks-Barrels/" />
+    <meta property="twitter:title" content="Muhammad Aslam Tanks & Barrels | Industrial Packaging UAE" />
+    <meta property="twitter:description" content="Leading supplier of New & Reconditioned Steel Drums, Plastic Barrels and IBC Containers in UAE." />
+    <meta property="twitter:image" content="images/about_us.png" />
+
     <title>Muhammad Aslam Tanks & Barrels | Premium Industrial Packaging</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -22,12 +42,50 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Muhammad Aslam Tanks & Barrels Maintenance",
+      "image": "images/logo.png",
+      "@id": "https://muhammadrehanqadri.github.io/Muhammad-Aslam-Tanks-Barrels/",
+      "url": "https://muhammadrehanqadri.github.io/Muhammad-Aslam-Tanks-Barrels/",
+      "telephone": "+971522560462",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Al Sajaa Industrial Area, Opposite Al Asal Marbel Yard no.27",
+        "addressLocality": "Sharjah",
+        "addressCountry": "AE"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 25.322304,
+        "longitude": 55.619864
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Saturday",
+          "Sunday"
+        ],
+        "opens": "08:00",
+        "closes": "20:00"
+      },
+      "sameAs": [] 
+    }
+    </script>
   </head>
   <body>
     <header id="header">
       <div class="container">
         <div class="logo">
-          <a href="#"><img src="images/logo.png" alt="Aslam Tanks Logo"></a>
+          <a href="#"><img src="images/logo.png" alt="Aslam Tanks Logo"> <span>Aslam Tanks & Barrels</span></a>
         </div>
         <nav>
           <ul class="nav-links">
@@ -383,7 +441,7 @@
           <a href="#contact">Contact</a>
         </div>
         <div class="copy">
-          &copy; 2025 Muhammad Aslam Tanks & Barrels Maintenance. All Rights
+          &copy; <span id="current-year"></span> Muhammad Aslam Tanks & Barrels Maintenance. All Rights
           Reserved.
         </div>
       </div>

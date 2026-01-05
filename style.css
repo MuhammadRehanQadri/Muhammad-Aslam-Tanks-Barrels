@@ -633,12 +633,35 @@ footer {
     padding-top: 1rem;
 }
 
-/* Helper for blending logo if it has white bg */
+/* Updated Logo Style */
+.logo a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
 .logo img {
      background-color: transparent;
      border-radius: 5px; 
+     height: 40px; /* Adjust height to fit */
+     width: auto;
 }
-/* Note: I'm not applying a blend mode blindly as it can ruin the logo. */
+
+.logo span {
+    color: var(--text-light);
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block; /* Ensure visibility */
+}
+
+@media (max-width: 480px) {
+    .logo span {
+        display: none; /* Hide text on very small screens if needed, or adjust font size */
+    }
+}
 
 /* Responsive specific updates */
 @media (max-width: 960px) {
