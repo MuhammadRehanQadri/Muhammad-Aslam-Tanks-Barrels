@@ -1,6 +1,7 @@
 const burger = document.querySelector(".burger");
 const nav = document.querySelector(".nav-links");
 const navLinks = document.querySelectorAll(".nav-links li");
+const header = document.getElementById("header");
 
 if (burger && nav) {
   burger.addEventListener("click", () => {
@@ -15,6 +16,16 @@ if (burger && nav) {
     });
   });
 }
+
+const setHeaderState = () => {
+  if (!header) {
+    return;
+  }
+  header.classList.toggle("scrolled", window.scrollY > 20);
+};
+
+setHeaderState();
+window.addEventListener("scroll", setHeaderState);
 
 const reveals = document.querySelectorAll(".reveal");
 if ("IntersectionObserver" in window) {
