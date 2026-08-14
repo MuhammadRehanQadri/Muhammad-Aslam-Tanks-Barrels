@@ -1,19 +1,33 @@
-const burger = document.querySelector(".burger");
+const navToggle = document.getElementById("nav-toggle");
 const nav = document.querySelector(".nav-links");
-const navLinks = document.querySelectorAll(".nav-links li");
 const header = document.getElementById("header");
 
-if (burger && nav) {
-  burger.addEventListener("click", () => {
-    nav.classList.toggle("nav-active");
-    burger.classList.toggle("toggle");
+if (navToggle && nav) {
+  const setOpen = (open) => {
+    nav.classList.toggle("nav-active", open);
+    navToggle.classList.toggle("toggle", open);
+    navToggle.setAttribute("aria-expanded", String(open));
+    navToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+  };
+
+  navToggle.addEventListener("click", () => {
+    const open = !nav.classList.contains("nav-active");
+    setOpen(open);
+    if (open) {
+      const first = nav.querySelector("a");
+      if (first) first.focus();
+    }
   });
 
-  navLinks.forEach((link) => {
-    link.addEventListener("click", () => {
-      nav.classList.remove("nav-active");
-      burger.classList.remove("toggle");
-    });
+  nav.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => setOpen(false));
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && nav.classList.contains("nav-active")) {
+      setOpen(false);
+      navToggle.focus();
+    }
   });
 }
 
@@ -25,7 +39,7 @@ const setHeaderState = () => {
 };
 
 setHeaderState();
-window.addEventListener("scroll", setHeaderState);
+window.addEventListener("scroll", setHeaderState, { passive: true });
 
 const reveals = document.querySelectorAll(".reveal");
 if ("IntersectionObserver" in window) {
@@ -46,26 +60,16 @@ if ("IntersectionObserver" in window) {
   reveals.forEach((el) => el.classList.add("is-visible"));
 }
 
-// Smooth scrolling for in-page anchors
-const anchorLinks = document.querySelectorAll('a[href^="#"]');
-anchorLinks.forEach((anchor) => {
-  anchor.addEventListener("click", function (e) {
-    const targetId = this.getAttribute("href");
-    if (!targetId || targetId === "#") {
-      return;
-    }
-
-    const target = document.querySelector(targetId);
-    if (target) {
-      e.preventDefault();
-      target.scrollIntoView({ behavior: "smooth" });
-    }
-  });
-});
-
 // Contact Form Handling
 const contactForm = document.querySelector(".contact-form");
 if (contactForm) {
+  const status = document.getElementById("form-status");
+  const say = (msg, ok) => {
+    if (!status) return;
+    status.textContent = msg;
+    status.className = "form-status " + (ok ? "ok" : "err");
+  };
+
   contactForm.addEventListener("submit", function (e) {
     e.preventDefault();
 
@@ -80,6 +84,7 @@ if (contactForm) {
     const btn = form.querySelector('button[type="submit"]');
     const originalText = btn.innerText;
 
+    say("", true);
     btn.innerText = "Sending...";
     btn.disabled = true;
     btn.style.opacity = "0.7";
@@ -93,26 +98,43 @@ if (contactForm) {
     })
       .then((response) => {
         if (response.ok) {
-          btn.innerText = "Message Sent!";
+          btn.innerText = "Request Sent";
           btn.style.backgroundColor = "#10b981";
           form.reset();
-          alert("Thank you! Your message has been sent successfully.");
-        } else {
-          response.json().then((data) => {
-            if (Object.hasOwn(data, "errors")) {
-              alert(data["errors"].map((error) => error["message"]).join(", "));
-            } else {
-              alert("Oops! There was a problem submitting your form");
-            }
-          });
-          btn.innerText = "Error";
-          btn.style.backgroundColor = "#ef4444";
+          say(
+            "Thank you — your request has been sent. We reply within one working day. For a faster response, message us on WhatsApp.",
+            true
+          );
+          return;
         }
-      })
-      .catch(() => {
-        alert("Oops! There was a problem submitting your form");
         btn.innerText = "Error";
         btn.style.backgroundColor = "#ef4444";
+        return response
+          .json()
+          .then((body) => {
+            if (body && body.errors) {
+              say(body.errors.map((err) => err.message).join(", "), false);
+            } else {
+              say(
+                "Sorry — there was a problem sending your request. Please call or WhatsApp us on +971 52 256 0462.",
+                false
+              );
+            }
+          })
+          .catch(() => {
+            say(
+              "Sorry — there was a problem sending your request. Please call or WhatsApp us on +971 52 256 0462.",
+              false
+            );
+          });
+      })
+      .catch(() => {
+        btn.innerText = "Error";
+        btn.style.backgroundColor = "#ef4444";
+        say(
+          "Sorry — there was a problem sending your request. Please call or WhatsApp us on +971 52 256 0462.",
+          false
+        );
       })
       .finally(() => {
         setTimeout(() => {

@@ -45,6 +45,7 @@ ul {
 
 img {
   max-width: 100%;
+  height: auto;
   display: block;
 }
 
@@ -178,9 +179,14 @@ header.scrolled .nav-shell {
 .burger {
   display: none;
   cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 4px;
+  line-height: 0;
 }
 
-.burger div {
+.burger span {
+  display: block;
   width: 24px;
   height: 3px;
   background-color: var(--white);
@@ -255,6 +261,10 @@ header.scrolled .nav-shell {
   position: absolute;
   inset: 0;
   background-image: url("images/hero.png");
+  background-image: image-set(
+    url("images/hero.webp") type("image/webp"),
+    url("images/hero.png") type("image/png")
+  );
   background-size: cover;
   background-position: center;
   z-index: -3;
@@ -329,8 +339,10 @@ header.scrolled .nav-shell {
   transition: var(--transition);
 }
 
-.stat-card h3 {
+.stat-card p strong {
+  display: block;
   color: var(--white);
+  font-family: "Space Grotesk", sans-serif;
   margin-bottom: 0.2rem;
   font-size: 1.3rem;
 }
@@ -377,7 +389,7 @@ header.scrolled .nav-shell {
   transition: var(--transition);
 }
 
-.hero-card h4 {
+.hero-card h2 {
   margin-bottom: 0.35rem;
   color: var(--ink);
   font-size: 1.05rem;
@@ -479,8 +491,9 @@ header.scrolled .nav-shell {
   color: var(--accent);
 }
 
-.trust-card h4 {
+.trust-card h2 {
   margin-bottom: 0.4rem;
+  font-size: 1.15rem;
 }
 
 .trust-card p {
@@ -543,8 +556,9 @@ header.scrolled .nav-shell {
   max-width: 240px;
 }
 
-.about-card h4 {
+.about-card h3 {
   margin-bottom: 0.4rem;
+  font-size: 1.1rem;
 }
 
 /* Process */
@@ -707,7 +721,7 @@ header.scrolled .nav-shell {
 
 .service-cats {
   font-size: 0.85rem;
-  color: #7b8795;
+  color: var(--text-muted);
   border-top: 1px solid #e2e8f0;
   padding-top: 1rem;
 }
@@ -744,8 +758,9 @@ header.scrolled .nav-shell {
   margin-bottom: 1.2rem;
 }
 
-.industry-card h4 {
+.industry-card h3 {
   margin-bottom: 0.6rem;
+  font-size: 1.15rem;
 }
 
 /* Gallery */
@@ -805,18 +820,13 @@ header.scrolled .nav-shell {
 }
 
 .testimonial-card p {
-  font-style: italic;
-  color: var(--text);
-}
-
-.testimonial-card h4 {
-  margin-top: 1.4rem;
-  margin-bottom: 0.2rem;
-}
-
-.testimonial-card span {
   color: var(--text-muted);
-  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+.testimonial-card h3 {
+  margin-bottom: 0.6rem;
+  font-size: 1.15rem;
 }
 
 .testimonial-card:hover {
@@ -864,8 +874,9 @@ header.scrolled .nav-shell {
   margin-top: 4px;
 }
 
-.info-item h4 {
+.info-item h3 {
   margin-bottom: 0.4rem;
+  font-size: 1.05rem;
 }
 
 .info-item p,
@@ -939,7 +950,7 @@ footer {
   gap: 1.5rem;
 }
 
-.footer-brand h3 {
+.footer-brand h2 {
   color: var(--white);
   font-size: 1.5rem;
   margin-bottom: 0.4rem;
@@ -1006,6 +1017,10 @@ footer {
 /* Careers */
 .hero-bg.careers {
   background-image: url("images/careers_hero.png");
+  background-image: image-set(
+    url("images/careers_hero.webp") type("image/webp"),
+    url("images/careers_hero.png") type("image/png")
+  );
 }
 
 .job-list {
@@ -1177,4 +1192,384 @@ footer {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ==========================================================================
+   SEO / accessibility / conversion additions
+   ========================================================================== */
+
+/* Anchor targets were landing underneath the fixed header */
+section[id],
+main[id] {
+  scroll-margin-top: 100px;
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+}
+
+.skip-link:focus {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  z-index: 9999;
+  background: var(--white);
+  color: var(--ink);
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Visible focus for keyboard users everywhere, not just form fields */
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+summary:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* WCAG AA contrast: --accent-strong (#de8c1d) is 2.67:1 on white as text */
+:root {
+  --accent-text: #a8650f;
+}
+
+.btn-text,
+.apply-btn,
+.feature-list i,
+.card-image + .card-body .btn-text {
+  color: var(--accent-text);
+}
+
+/* Screen-reader-only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+/* Mobile nav is moved off-screen with transform, which does not remove it
+   from the focus order or the accessibility tree */
+@media (max-width: 768px) {
+  .nav-links {
+    visibility: hidden;
+    transition: transform 0.5s ease, visibility 0.5s ease;
+  }
+
+  .nav-links.nav-active {
+    visibility: visible;
+  }
+}
+
+/* WhatsApp entry points */
+.nav-wa {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-left: 1.25rem;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: #25d366;
+  color: #06331a;
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.nav-wa:hover {
+  background: #1eb455;
+}
+
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin-top: 1.25rem;
+}
+
+.btn-wa {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #0f7a3d;
+}
+
+.btn-wa:hover {
+  text-decoration: underline;
+}
+
+.wa-float {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 900;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #25d366;
+  color: #fff;
+  font-size: 1.75rem;
+  box-shadow: var(--shadow-lg);
+  transition: var(--transition);
+}
+
+.wa-float:hover {
+  transform: scale(1.06);
+}
+
+@media (min-width: 769px) {
+  .wa-float {
+    right: 26px;
+    bottom: 26px;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-wa {
+    display: none;
+  }
+}
+
+/* FAQ */
+.faq-list {
+  max-width: 860px;
+  margin: 0 auto;
+  display: grid;
+  gap: 1rem;
+}
+
+.faq-item {
+  background: var(--white);
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1.1rem 1.4rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.faq-item summary {
+  cursor: pointer;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--ink);
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary::after {
+  content: "+";
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--accent-text);
+  flex-shrink: 0;
+}
+
+.faq-item[open] summary::after {
+  content: "\2212";
+}
+
+.faq-item p {
+  margin: 0.9rem 0 0;
+  font-size: 0.95rem;
+}
+
+/* Form additions */
+.form-note {
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.form-group select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 1rem;
+  background: var(--white);
+  transition: var(--transition);
+}
+
+.form-group select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(244, 178, 59, 0.18);
+}
+
+.form-status {
+  margin: 1rem 0 0;
+  font-size: 0.9rem;
+}
+
+.form-status:empty {
+  margin: 0;
+}
+
+.form-status.ok {
+  color: #0f7a3d;
+}
+
+.form-status.err {
+  color: #b42318;
+}
+
+.form-consent {
+  margin: 0.75rem 0 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Simple text pages (privacy, 404) — these have no hero to clear the fixed header */
+section.page-body {
+  padding-top: 160px;
+}
+
+.container.narrow {
+  max-width: 760px;
+}
+
+.page-body h2 {
+  font-size: 1.4rem;
+  margin-top: 2rem;
+}
+
+.page-meta {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Nav gained an eighth link and a WhatsApp pill; give it room to breathe
+   between the mobile breakpoint and full desktop. The floating WhatsApp
+   button still covers these widths. */
+@media (max-width: 1100px) {
+  .nav-wa {
+    display: none;
+  }
+
+  .nav-links {
+    gap: 1.15rem;
+  }
+
+  .nav-links a {
+    font-size: 0.9rem;
+  }
+}
+
+/* ==========================================================================
+   Phase-2 landing pages (/drum-reconditioning/, /used-drums/, /ibc-tanks/)
+   ========================================================================== */
+
+.page-hero {
+  position: relative;
+  padding: 170px 0 70px;
+  background: linear-gradient(120deg, var(--ink) 0%, var(--ink-soft) 100%);
+  color: var(--white);
+}
+
+.page-hero h1 {
+  color: var(--white);
+  max-width: 18ch;
+}
+
+.page-lede {
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 62ch;
+  font-size: 1.05rem;
+}
+
+.breadcrumb {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 1.2rem;
+}
+
+.breadcrumb a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: underline;
+}
+
+.breadcrumb span[aria-hidden] {
+  margin: 0 0.4rem;
+}
+
+.page-section {
+  margin-bottom: 2.75rem;
+}
+
+.page-section h2 {
+  font-size: 1.6rem;
+  margin-bottom: 0.9rem;
+}
+
+.page-section p {
+  margin-bottom: 1rem;
+}
+
+/* Content lists need markers back — the global reset strips them */
+.page-section ul {
+  list-style: disc;
+  padding-left: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.page-section li {
+  margin-bottom: 0.5rem;
+  color: var(--text-muted);
+}
+
+.page-section a:not(.btn) {
+  color: var(--accent-text);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.page-cta {
+  background: var(--white);
+  border-left: 4px solid var(--accent);
+  border-radius: 14px;
+  padding: 1.6rem 1.8rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.page-cta h2 {
+  font-size: 1.3rem;
+  margin-bottom: 0.6rem;
+}
+
+.page-cta p {
+  margin-bottom: 0;
+}
+
+.service-cats a {
+  color: var(--accent-text);
+  font-weight: 600;
+  text-decoration: underline;
 }
