@@ -102,26 +102,61 @@ p {
 }
 
 /* Header
-   A light bar over the dark heroes: the logo mark is a black "A" over a
-   purple "M", and the black half vanished on the old ink background.
+   Frosted glass that takes its tone from whatever is scrolling underneath:
+   dark glass with white type while a dark band (hero, page hero, CTA banner)
+   is under the bar, white glass everywhere else. script.js toggles .on-dark
+   as the bands pass; pages that open on a dark band also carry the class in
+   their markup so the first paint is already right, and the dark glass stays
+   legible over light content if the script never runs.
    --header-h drives every offset that must clear the fixed bar (hero and
    page-body padding, anchor scroll margin), so the bar's height is set in
    one place. */
 header {
+  --glass-light: rgba(255, 255, 255, 0.72);
+  --glass-dark: rgba(12, 18, 34, 0.55);
+  --header-fg: var(--ink);
+  --header-fg-muted: var(--text-muted);
   position: fixed;
   top: 0;
   width: 100%;
   z-index: 1000;
-  background: rgba(255, 255, 255, 0.9);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  background-color: var(--glass-light);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
   border-bottom: 1px solid rgba(12, 18, 34, 0.08);
-  transition: var(--transition);
+  transition: background-color var(--transition), border-color var(--transition),
+    box-shadow var(--transition);
 }
 
 header.scrolled {
-  background: rgba(255, 255, 255, 0.97);
   box-shadow: 0 8px 30px rgba(12, 18, 34, 0.08);
+}
+
+header.on-dark {
+  --header-fg: var(--white);
+  --header-fg-muted: rgba(255, 255, 255, 0.7);
+  background-color: var(--glass-dark);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+header.on-dark.scrolled {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* The glass needs more body where nothing blurs the content behind it, or
+   when the OS asks for less transparency */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  header {
+    --glass-light: rgba(255, 255, 255, 0.96);
+    --glass-dark: rgba(12, 18, 34, 0.94);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  header {
+    --glass-light: rgba(255, 255, 255, 0.96);
+    --glass-dark: rgba(12, 18, 34, 0.94);
+  }
 }
 
 .nav-shell {
@@ -135,19 +170,50 @@ header.scrolled {
 /* Logo lockup: mark + two-line wordmark. The lockup never shrinks or wraps;
    the nav gives way first. */
 .logo {
+  --logo-h: 52px;
   flex-shrink: 0;
 }
 
 .logo a {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
-  color: var(--ink);
+  color: var(--header-fg);
 }
 
 .logo img {
-  height: 52px;
+  height: var(--logo-h);
   width: auto;
+  transition: opacity var(--transition);
+}
+
+/* The mark is a black "A" over a purple "M", and the black half vanishes on
+   dark glass. This is the same PNG through a filter that turns the A white
+   and keeps the purple within a few levels (128,111,235 -> 136,119,243),
+   laid over the <img> so the two crossfade; animating the filter itself
+   would drag the purple through grey on the way. */
+.logo a::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: var(--logo-h);
+  aspect-ratio: 280 / 202;
+  transform: translateY(-50%);
+  background: url("images/logo.png") center / contain no-repeat;
+  filter: invert(1) hue-rotate(180deg);
+  opacity: 0;
+  transition: opacity var(--transition);
+  pointer-events: none;
+}
+
+header.on-dark .logo a::before {
+  opacity: 1;
+}
+
+header.on-dark .logo img {
+  opacity: 0;
 }
 
 .logo-text {
@@ -169,7 +235,7 @@ header.scrolled {
   font-weight: 600;
   font-size: 0.66rem;
   letter-spacing: 0.18em;
-  color: var(--text-muted);
+  color: var(--header-fg-muted);
 }
 
 /* nav is a flex row so the WhatsApp pill sits beside the links instead of
@@ -188,7 +254,7 @@ header nav {
 
 .nav-links a {
   display: block;
-  color: var(--ink);
+  color: var(--header-fg);
   font-weight: 500;
   font-size: 0.95rem;
   white-space: nowrap;
@@ -239,7 +305,7 @@ header nav {
   width: 22px;
   height: 2px;
   border-radius: 2px;
-  background-color: var(--ink);
+  background-color: var(--header-fg);
   transition: var(--transition);
 }
 
@@ -275,8 +341,8 @@ header nav {
     --header-h: 64px;
   }
 
-  .logo img {
-    height: 44px;
+  .logo {
+    --logo-h: 44px;
   }
 
   .logo a {
@@ -326,8 +392,10 @@ header nav {
     transform: none;
   }
 
+  /* The panel is always white, whatever the bar above it is doing */
   .nav-links a {
     padding: 0.85rem 24px;
+    color: var(--ink);
     font-size: 1.05rem;
     font-weight: 600;
     border-bottom: 1px solid rgba(12, 18, 34, 0.06);
@@ -343,6 +411,24 @@ header nav {
 
   .nav-links a[aria-current="page"] {
     color: var(--accent-text);
+  }
+
+  /* An open menu turns the bar back into one white sheet with the panel,
+     even over a dark band. Same specificity as the .on-dark rules above, so
+     these win on source order. */
+  header.menu-open {
+    --header-fg: var(--ink);
+    --header-fg-muted: var(--text-muted);
+    background-color: var(--white);
+    border-bottom-color: rgba(12, 18, 34, 0.08);
+  }
+
+  header.menu-open .logo a::before {
+    opacity: 0;
+  }
+
+  header.menu-open .logo img {
+    opacity: 1;
   }
 }
 

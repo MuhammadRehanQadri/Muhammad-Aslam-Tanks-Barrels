@@ -8,6 +8,9 @@ if (navToggle && nav) {
     navToggle.classList.toggle("toggle", open);
     navToggle.setAttribute("aria-expanded", String(open));
     navToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    if (header) {
+      header.classList.toggle("menu-open", open);
+    }
   };
 
   navToggle.addEventListener("click", () => {
@@ -31,15 +34,31 @@ if (navToggle && nav) {
   });
 }
 
+// The bar is dark glass while one of these dark bands is under it and white
+// glass everywhere else. Pages that open on a band also carry .on-dark in
+// their markup, so this only has to keep up once the page moves.
+const darkBands = Array.from(
+  document.querySelectorAll(".hero, .page-hero, .banner-section")
+);
+
 const setHeaderState = () => {
   if (!header) {
     return;
   }
   header.classList.toggle("scrolled", window.scrollY > 20);
+
+  // A band counts once it reaches the middle of the bar
+  const mid = header.offsetHeight / 2;
+  const onDark = darkBands.some((band) => {
+    const box = band.getBoundingClientRect();
+    return box.top <= mid && box.bottom > mid;
+  });
+  header.classList.toggle("on-dark", onDark);
 };
 
 setHeaderState();
 window.addEventListener("scroll", setHeaderState, { passive: true });
+window.addEventListener("resize", setHeaderState);
 
 const reveals = document.querySelectorAll(".reveal");
 if ("IntersectionObserver" in window) {
