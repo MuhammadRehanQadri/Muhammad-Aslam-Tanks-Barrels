@@ -13,6 +13,7 @@
   --shadow-lg: 0 20px 50px rgba(12, 18, 34, 0.14);
   --transition: 0.3s ease;
   --radius: 18px;
+  --header-h: 76px;
 }
 
 * {
@@ -100,63 +101,97 @@ p {
   background-color: var(--bg-alt);
 }
 
-/* Header */
+/* Header
+   A light bar over the dark heroes: the logo mark is a black "A" over a
+   purple "M", and the black half vanished on the old ink background.
+   --header-h drives every offset that must clear the fixed bar (hero and
+   page-body padding, anchor scroll margin), so the bar's height is set in
+   one place. */
 header {
   position: fixed;
   top: 0;
   width: 100%;
   z-index: 1000;
-  background: rgba(12, 18, 34, 0.92);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 10px 20px rgba(12, 18, 34, 0.2);
+  background: rgba(255, 255, 255, 0.9);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(12, 18, 34, 0.08);
   transition: var(--transition);
+}
+
+header.scrolled {
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 8px 30px rgba(12, 18, 34, 0.08);
 }
 
 .nav-shell {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 0;
-  transition: var(--transition);
+  gap: 1.5rem;
+  min-height: var(--header-h);
 }
 
-header.scrolled {
-  background: rgba(12, 18, 34, 0.98);
-  box-shadow: 0 14px 30px rgba(12, 18, 34, 0.35);
-}
-
-header.scrolled .nav-shell {
-  padding: 0.65rem 0;
+/* Logo lockup: mark + two-line wordmark. The lockup never shrinks or wraps;
+   the nav gives way first. */
+.logo {
+  flex-shrink: 0;
 }
 
 .logo a {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--white);
+  color: var(--ink);
 }
 
 .logo img {
-  height: 44px;
+  height: 52px;
   width: auto;
 }
 
-.logo span {
-  font-size: 1rem;
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.logo-name {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: 0.04em;
+}
+
+.logo-tag {
+  font-weight: 600;
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+}
+
+/* nav is a flex row so the WhatsApp pill sits beside the links instead of
+   dropping onto a second line beneath them */
+header nav {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
 }
 
 .nav-links {
   display: flex;
-  gap: 1.8rem;
+  align-items: center;
+  gap: 1.6rem;
 }
 
 .nav-links a {
-  color: var(--white);
+  display: block;
+  color: var(--ink);
   font-weight: 500;
   font-size: 0.95rem;
+  white-space: nowrap;
   position: relative;
   padding: 6px 0;
 }
@@ -172,26 +207,143 @@ header.scrolled .nav-shell {
   transition: var(--transition);
 }
 
-.nav-links a:hover::after {
+.nav-links a:hover::after,
+.nav-links a[aria-current="page"]::after {
   width: 100%;
 }
 
+.nav-links a[aria-current="page"] {
+  font-weight: 600;
+}
+
+/* 44px hit target; the negative margin lines the bars up with the container
+   edge rather than the button's edge */
 .burger {
   display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  margin-right: -10px;
+  padding: 0;
   cursor: pointer;
   background: none;
   border: 0;
-  padding: 4px;
-  line-height: 0;
+  border-radius: 50%;
 }
 
 .burger span {
   display: block;
-  width: 24px;
-  height: 3px;
-  background-color: var(--white);
-  margin: 5px;
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  background-color: var(--ink);
   transition: var(--transition);
+}
+
+.burger.toggle .line1 {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.burger.toggle .line2 {
+  opacity: 0;
+}
+
+.burger.toggle .line3 {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Eight links plus the WhatsApp pill stop fitting below ~1100px; the pill
+   goes icon-only at the same width (see .nav-wa, further down). */
+@media (max-width: 1100px) {
+  .nav-links {
+    gap: 1.15rem;
+  }
+
+  .nav-links a {
+    font-size: 0.9rem;
+  }
+}
+
+/* Below 1024px the links move into a full-width panel under the bar. The
+   panel is hidden with visibility as well as opacity so it leaves the focus
+   order and the accessibility tree while closed. */
+@media (max-width: 1024px) {
+  :root {
+    --header-h: 64px;
+  }
+
+  .logo img {
+    height: 44px;
+  }
+
+  .logo a {
+    gap: 10px;
+  }
+
+  .logo-name {
+    font-size: 1.1rem;
+  }
+
+  .logo-tag {
+    font-size: 0.58rem;
+    letter-spacing: 0.14em;
+  }
+
+  header nav {
+    gap: 0.75rem;
+  }
+
+  .burger {
+    display: flex;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    max-height: calc(100vh - var(--header-h));
+    overflow-y: auto;
+    padding: 0.5rem 0 1rem;
+    background: var(--white);
+    border-top: 1px solid rgba(12, 18, 34, 0.08);
+    box-shadow: 0 24px 40px rgba(12, 18, 34, 0.14);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+  }
+
+  .nav-links.nav-active {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+
+  .nav-links a {
+    padding: 0.85rem 24px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(12, 18, 34, 0.06);
+  }
+
+  .nav-links li:last-child a {
+    border-bottom: 0;
+  }
+
+  .nav-links a::after {
+    display: none;
+  }
+
+  .nav-links a[aria-current="page"] {
+    color: var(--accent-text);
+  }
 }
 
 /* Buttons */
@@ -251,7 +403,7 @@ header.scrolled .nav-shell {
   min-height: 100vh;
   display: flex;
   align-items: center;
-  padding-top: 90px;
+  padding: calc(var(--header-h) + 3rem) 0 3rem;
   position: relative;
   overflow: hidden;
   color: var(--white);
@@ -1120,52 +1272,6 @@ footer {
   }
 }
 
-@media (max-width: 768px) {
-  .nav-links {
-    position: absolute;
-    right: 0;
-    height: 100vh;
-    top: 0;
-    background-color: var(--ink);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 70%;
-    transform: translateX(100%);
-    transition: transform 0.5s ease-in;
-    padding-top: 100px;
-  }
-
-  .nav-links.nav-active {
-    transform: translateX(0%);
-  }
-
-  .burger {
-    display: block;
-    z-index: 1001;
-  }
-
-  .burger.toggle .line1 {
-    transform: rotate(-45deg) translate(-5px, 6px);
-  }
-
-  .burger.toggle .line2 {
-    opacity: 0;
-  }
-
-  .burger.toggle .line3 {
-    transform: rotate(45deg) translate(-5px, -6px);
-  }
-
-  .logo span {
-    display: none;
-  }
-
-  .hero {
-    padding-top: 80px;
-  }
-}
-
 @media (max-width: 600px) {
   .section-padding {
     padding: 70px 0;
@@ -1201,7 +1307,7 @@ footer {
 /* Anchor targets were landing underneath the fixed header */
 section[id],
 main[id] {
-  scroll-margin-top: 100px;
+  scroll-margin-top: calc(var(--header-h) + 24px);
 }
 
 /* Skip link */
@@ -1255,25 +1361,11 @@ textarea:focus-visible {
   white-space: nowrap;
 }
 
-/* Mobile nav is moved off-screen with transform, which does not remove it
-   from the focus order or the accessibility tree */
-@media (max-width: 768px) {
-  .nav-links {
-    visibility: hidden;
-    transition: transform 0.5s ease, visibility 0.5s ease;
-  }
-
-  .nav-links.nav-active {
-    visibility: visible;
-  }
-}
-
 /* WhatsApp entry points */
 .nav-wa {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  margin-left: 1.25rem;
   padding: 9px 16px;
   border-radius: 999px;
   background: #25d366;
@@ -1286,6 +1378,33 @@ textarea:focus-visible {
 
 .nav-wa:hover {
   background: #1eb455;
+}
+
+/* Icon-only below ~1100px, where eight links plus the full pill stop
+   fitting. These must follow the base rule above: same specificity, so
+   source order decides. font-size: 0 hides the label but leaves it in the
+   accessible name. */
+@media (max-width: 1100px) {
+  .nav-wa {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    gap: 0;
+    justify-content: center;
+    font-size: 0;
+  }
+
+  .nav-wa i {
+    font-size: 1.25rem;
+  }
+}
+
+/* Below 340px (320px-class phones) the header-bar icon has no room; the
+   floating WhatsApp button still covers the page. */
+@media (max-width: 340px) {
+  .nav-wa {
+    display: none;
+  }
 }
 
 .card-actions {
@@ -1335,12 +1454,6 @@ textarea:focus-visible {
   .wa-float {
     right: 26px;
     bottom: 26px;
-  }
-}
-
-@media (max-width: 768px) {
-  .nav-wa {
-    display: none;
   }
 }
 
@@ -1449,7 +1562,7 @@ textarea:focus-visible {
 
 /* Simple text pages (privacy, 404) — these have no hero to clear the fixed header */
 section.page-body {
-  padding-top: 160px;
+  padding-top: calc(var(--header-h) + 84px);
 }
 
 .container.narrow {
@@ -1466,30 +1579,13 @@ section.page-body {
   color: var(--text-muted);
 }
 
-/* Nav gained an eighth link and a WhatsApp pill; give it room to breathe
-   between the mobile breakpoint and full desktop. The floating WhatsApp
-   button still covers these widths. */
-@media (max-width: 1100px) {
-  .nav-wa {
-    display: none;
-  }
-
-  .nav-links {
-    gap: 1.15rem;
-  }
-
-  .nav-links a {
-    font-size: 0.9rem;
-  }
-}
-
 /* ==========================================================================
    Phase-2 landing pages (/drum-reconditioning/, /used-drums/, /ibc-tanks/)
    ========================================================================== */
 
 .page-hero {
   position: relative;
-  padding: 170px 0 70px;
+  padding: calc(var(--header-h) + 94px) 0 70px;
   background: linear-gradient(120deg, var(--ink) 0%, var(--ink-soft) 100%);
   color: var(--white);
 }
